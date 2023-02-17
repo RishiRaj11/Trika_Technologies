@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ProductTable.css";
-import Pagination from "./Pagination"
+import Pagination from "./Pagination";
 
 const ProductTable = () => {
   const [loadding, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-  const [currentPage,setCurrentPage]=useState(1);
-  const [postperPage,setPostperPage]=useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postperPage, setPostperPage] = useState(10);
 
   useEffect(() => {
     setLoading(true);
@@ -18,13 +18,16 @@ const ProductTable = () => {
     }
     fetchData();
   }, []);
-   
-  const indexOfLastPost=postperPage*currentPage;
-  const indexOfFirstPost=indexOfLastPost-postperPage;
-  const currentPost=products.slice(indexOfFirstPost,indexOfLastPost);
 
-  if(loadding){
-    return <h1>Loading...</h1>
+  const indexOfLastPost = postperPage * currentPage;
+  const indexOfFirstPost = indexOfLastPost - postperPage;
+  const currentPost = products.slice(indexOfFirstPost, indexOfLastPost);
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  if (loadding) {
+    return <h1>Loading...</h1>;
   }
   return (
     <>
@@ -53,8 +56,12 @@ const ProductTable = () => {
           </tr>
         ))}
       </table>
-      
-      <Pagination postperPage={postperPage} totalPost={products.length} />
+
+      <Pagination
+        postperPage={postperPage}
+        totalPost={products.length}
+        paginate={paginate}
+      />
     </>
   );
 };
