@@ -6,15 +6,14 @@ const productSchema = new mongoose.Schema({
     {
         id: {
             type: Number,
-            require: true,
-           
+            require: true,          
           },
         title: {
             type: String,
             require: true,
             trim: true,
           },
-          discription: {
+          description: {
             type: String,
             require: true,
             trim: true,
