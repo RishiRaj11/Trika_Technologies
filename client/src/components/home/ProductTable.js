@@ -23,7 +23,7 @@ const ProductTable = () => {
 console.log(products,"0000");
   const indexOfLastPost = postperPage * currentPage;
   const indexOfFirstPost = indexOfLastPost - postperPage;
-  //const currentPost = products.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPost = products.slice(indexOfFirstPost, indexOfLastPost);
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -47,15 +47,15 @@ console.log(products,"0000");
 
   const deletedSelectedone = () => {
     let filtered = products.filter((item) => item.isChecked !== true);
-    console.log(filtered);
-    // const updatedData = {
-    //   products: filtered,
-    //   total: 100,
-    //   skip: 0,
-    //   limit: 30,
-    // };
+    //console.log(filtered);
+    const updatedData = {
+      products: filtered,
+      total: 100,
+      skip: 0,
+      limit: 30,
+    };
     const postData = async () => {
-      await axios.post("http://localhost:5000/products", filtered);
+      await axios.post("http://localhost:5000/products",  updatedData);
     };
     postData();
    // setProducts( updatedData);
@@ -93,7 +93,7 @@ console.log(products,"0000");
           <th>Price</th>
           <th>Brand</th>
         </tr>
-        {products
+        {currentPost
           .filter((val) => {
             if (searchInput === "") {
               return val;
