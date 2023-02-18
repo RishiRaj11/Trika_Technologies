@@ -7,7 +7,7 @@ const Header = () => {
         <header>
             <AppBar  >
                 <Toolbar >
-                    <img src={image_url} width="10%" />
+                    <h2>Tarika Technologies</h2>
                 </Toolbar>
             </AppBar>
         </header>

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ProductTable.css";
 import Pagination from "./Pagination";
+import DeleteSelected from "./DeleteSelected";
 
 const ProductTable = () => {
   const [loadding, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postperPage, setPostperPage] = useState(10);
+  const [postperPage] = useState(10);
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -18,10 +20,10 @@ const ProductTable = () => {
     }
     fetchData();
   }, []);
-
+console.log(products,"0000");
   const indexOfLastPost = postperPage * currentPage;
   const indexOfFirstPost = indexOfLastPost - postperPage;
-  const currentPost = products.slice(indexOfFirstPost, indexOfLastPost);
+  //const currentPost = products.slice(indexOfFirstPost, indexOfLastPost);
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -43,12 +45,38 @@ const ProductTable = () => {
     }
   };
 
+  const deletedSelectedone = () => {
+    let filtered = products.filter((item) => item.isChecked !== true);
+    console.log(filtered);
+    // const updatedData = {
+    //   products: filtered,
+    //   total: 100,
+    //   skip: 0,
+    //   limit: 30,
+    // };
+    const postData = async () => {
+      await axios.post("http://localhost:5000/products", filtered);
+    };
+    postData();
+   // setProducts( updatedData);
+   setProducts(filtered)
+  };
+
+  const searchHnadler = (e) => {
+    setSearchInput(e.target.value);
+  };
+
   if (loadding) {
     return <h1>Loading...</h1>;
   }
   return (
     <>
-      <input id="search" placeholder="Search by title..." />
+      <input
+        id="search"
+        placeholder="Search by title..."
+        onChange={searchHnadler}
+      />
+
       <table>
         <tr>
           <th>
@@ -65,30 +93,44 @@ const ProductTable = () => {
           <th>Price</th>
           <th>Brand</th>
         </tr>
+        {products
+          .filter((val) => {
+            if (searchInput === "") {
+              return val;
+            } else if (
+              val.title.toLowerCase().includes(searchInput.toLowerCase())
+            ) {
+              return val;
+            }
+          })
 
-        {currentPost.map((item) => (
-          <tr key={item.id}>
-            <td>
-              <input
-                type="checkbox"
-                name={item.title}
-                checked={item?.isChecked || false}
-                onChange={changeHandler}
-              />
-            </td>
-            <td>{item.title}</td>
-            <td>{item.description}</td>
-            <td>{item.price}</td>
-            <td>{item.brand}</td>
-          </tr>
-        ))}
+          .map((item) => (
+            <tr key={item.id}>
+              <td>
+                <input
+                  type="checkbox"
+                  name={item.title}
+                  checked={item?.isChecked || false}
+                  onChange={changeHandler}
+                />
+              </td>
+              <td>{item.title}</td>
+              <td>{item.description}</td>
+              <td>{item.price}</td>
+              <td>{item.brand}</td>
+            </tr>
+          ))}
       </table>
-
-      <Pagination
-        postperPage={postperPage}
-        totalPost={products.length}
-        paginate={paginate}
-      />
+      <div>
+        <button className="btn" onClick={deletedSelectedone}>
+          <DeleteSelected />
+        </button>
+        <Pagination
+          postperPage={postperPage}
+          totalPost={products.length}
+          paginate={paginate}
+        />
+      </div>
     </>
   );
 };
