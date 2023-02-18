@@ -10,17 +10,19 @@ const ProductTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postperPage] = useState(10);
   const [searchInput, setSearchInput] = useState("");
+  
+  const URL="http://localhost:5000";
 
   useEffect(() => {
     setLoading(true);
     async function fetchData() {
-      const post = await axios.get("http://localhost:5000/products");
+      const post = await axios.get(`${URL}/products`);
       setProducts(post.data.products);
       setLoading(false);
     }
     fetchData();
   }, []);
-console.log(products,"0000");
+
   const indexOfLastPost = postperPage * currentPage;
   const indexOfFirstPost = indexOfLastPost - postperPage;
   const currentPost = products.slice(indexOfFirstPost, indexOfLastPost);
@@ -34,20 +36,20 @@ console.log(products,"0000");
       const checkedValue = products.map((product) => {
         return { ...product, isChecked: checked };
       });
-      //console.log(checkedValue);
+ 
       setProducts(checkedValue);
     } else {
       const checkedValue = products.map((product) =>
         product.title === name ? { ...product, isChecked: checked } : product
       );
-      console.log(checkedValue);
+ 
       setProducts(checkedValue);
     }
   };
 
   const deletedSelectedone = () => {
     let filtered = products.filter((item) => item.isChecked !== true);
-    //console.log(filtered);
+   
     const updatedData = {
       products: filtered,
       total: 100,
@@ -55,11 +57,11 @@ console.log(products,"0000");
       limit: 30,
     };
     const postData = async () => {
-      await axios.post("http://localhost:5000/products",  updatedData);
+      await axios.post(`${URL}/products`, updatedData);
     };
     postData();
-   // setProducts( updatedData);
-   setProducts(filtered)
+    // setProducts( updatedData);
+    setProducts(filtered);
   };
 
   const searchHnadler = (e) => {

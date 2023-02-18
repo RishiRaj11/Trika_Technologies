@@ -1,6 +1,6 @@
 import React from 'react'
 import {AppBar, Toolbar} from "@mui/material"
-import { image_url } from '../data'
+
 const Header = () => {
   return (
     <>
