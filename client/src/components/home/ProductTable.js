@@ -12,7 +12,7 @@ const ProductTable = () => {
   useEffect(() => {
     setLoading(true);
     async function fetchData() {
-      const post = await axios.get("https://dummyjson.com/products");
+      const post = await axios.get("http://localhost:5000/products");
       setProducts(post.data.products);
       setLoading(false);
     }
@@ -26,6 +26,23 @@ const ProductTable = () => {
     setCurrentPage(pageNumber);
   };
 
+  const changeHandler = (e) => {
+    const { name, checked } = e.target;
+    if (name === "allselect") {
+      const checkedValue = products.map((product) => {
+        return { ...product, isChecked: checked };
+      });
+      //console.log(checkedValue);
+      setProducts(checkedValue);
+    } else {
+      const checkedValue = products.map((product) =>
+        product.title === name ? { ...product, isChecked: checked } : product
+      );
+      console.log(checkedValue);
+      setProducts(checkedValue);
+    }
+  };
+
   if (loadding) {
     return <h1>Loading...</h1>;
   }
@@ -35,7 +52,12 @@ const ProductTable = () => {
       <table>
         <tr>
           <th>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              name="allselect"
+              onChange={changeHandler}
+              checked={!products.some((product) => product?.isChecked !== true)}
+            />
             All
           </th>
           <th>Title</th>
@@ -47,7 +69,12 @@ const ProductTable = () => {
         {currentPost.map((item) => (
           <tr key={item.id}>
             <td>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                name={item.title}
+                checked={item?.isChecked || false}
+                onChange={changeHandler}
+              />
             </td>
             <td>{item.title}</td>
             <td>{item.description}</td>

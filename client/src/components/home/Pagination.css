@@ -4,3 +4,6 @@
     margin-top: 2%;
     align-items: center;
 }
+.pagination > button{
+    margin-left: 7px;
+}
